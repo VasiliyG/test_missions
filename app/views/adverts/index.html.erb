@@ -1,0 +1,59 @@
+<%- model_class = Advert -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:price) %></th>
+      <th><%= model_class.human_attribute_name(:description) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @adverts.each do |advert| %>
+      <tr>
+        <td><%= link_to advert.id, advert_path(advert) %></td>
+        <td><%= advert.title %></td>
+        <td><%= advert.price %></td>
+        <td><%= advert.description %></td>
+        <td><%= advert.user ?  advert.user.email : 'No user'%></td>
+        <td><%=l advert.created_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_advert_path(advert), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      advert_path(advert),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_advert_path,
+            :class => 'btn btn-primary' %>
+<hr/>
+Фильтр цены:
+<%= form_tag "adverts" do %>
+<div class="row">
+  <div class="small-10 columns">
+    <div class="range-slider" data-slider data-options="display_selector: #price; start: 1; end: <%= @max %>;">
+      <span class="range-slider-handle" role="slider" tabindex="0"></span>
+      <span class="range-slider-active-segment"></span>
+    </div>
+  </div>
+  <div class="small-2 columns">
+    <input type="number" id="price" value="" />
+  </div>
+</div>
+    <%= submit_tag "Go with filter" %>
+<% end %>
+

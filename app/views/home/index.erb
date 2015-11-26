@@ -1,0 +1,50 @@
+<div class="page-header">
+  <h1>Adverts</h1>
+</div>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>Price</th>
+    <th>Description</th>
+    <th>User</th>
+    <th>Date</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @adverts.each do |advert| %>
+      <tr>
+        <td><%= advert.title %></td>
+        <td><%= advert.price %></td>
+        <td><%= advert.description %></td>
+        <td><%= advert.user ?  advert.user.email : 'No user'%></td>
+        <td><%=l advert.created_at %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_advert_path,
+            :class => 'btn btn-primary' %>
+<hr/>
+Фильтр цены:
+<script>
+    var new_value = <%=params[:filter]%>;
+    $('.range-slider').foundation('slider', 'set_value', new_value);
+</script>
+<%= form_tag "/", method: :get  do %>
+    <div class="row">
+      <div class="small-10 columns">
+        <div class="range-slider" data-slider data-options="display_selector: #price; start: 1; end: <%= @max %>; value: 33;">
+          <span class="range-slider-handle" role="slider" tabindex="0"></span>
+          <span class="range-slider-active-segment"></span>
+        </div>
+      </div>
+      <div class="small-2 columns">
+        <input name="filter" type="number" id="price" value="" />
+      </div>
+    </div>
+    <%= submit_tag "Go with filter" %>
+<% end %>
+
